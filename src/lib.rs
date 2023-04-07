@@ -99,7 +99,10 @@ impl Logger {
                 // let link_esc = format!("\x1b]8;id=hi;{}\x1b\\", link_location);
                 // let link_esc_end = "\x1b]8;;\x1b\\";
                 // println!("{}{}{}{} {} {}", time_segment.bright_black(), link_esc, crate_.color(*color), link_esc_end, message.level, message.message);
-                println!("{}{} {} {}", time_segment.bright_black(), crate_.color(*color), message.level, message.message);
+                let header = format!("{}{} {}", time_segment.bright_black(), crate_.color(*color), message.level);
+                let header_width = time_segment.chars().count() + crate_.chars().count() + 5;
+                let just_message = message.message.replace("\n", &format!("\n {}", " ".repeat(header_width)));
+                println!("{} {}", header, just_message);
             } #[cfg(not(feature = "colors"))] {
                 println!("{}{} {} {}", time_segment, crate_, message.level, message.message);
             }
