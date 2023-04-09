@@ -1,5 +1,3 @@
-use justlogfox;
-
 #[test]
 fn all_public() {
     justlogfox::set_log_level(justlogfox::LogLevel::Trace);
