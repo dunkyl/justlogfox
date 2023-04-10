@@ -204,7 +204,7 @@ macro_rules! set_crate_color {
 /// Accepts a format string and any number of arguments.
 #[macro_export]
 macro_rules! log {
-    ([$namespace:path] $level:expr, $fmt:literal, $($fmt_args:tt),+) => {
+    ([$namespace:path] $level:expr, $fmt:literal, $($fmt_args:expr),+) => {
         {
         let message = format!($fmt, $($fmt_args),+);
         let namespace = stringify!($namespace);
@@ -214,11 +214,11 @@ macro_rules! log {
         $crate::log(namespace, $level, &message, Some(&file));
         }
     };
-    ([$namespace:path] $level:expr, $one_arg:tt) => {
+    ([$namespace:path] $level:expr, $one_arg:expr) => {
         $crate::log!([$namespace] $level, "{}", $one_arg);
     };
 
-    ($level:expr, $fmt:literal, $($fmt_args:tt),+) => {
+    ($level:expr, $fmt:literal, $($fmt_args:expr),+) => {
         {
         let message = format!($fmt, $($fmt_args),+);
         let namespace = module_path!();
@@ -228,7 +228,7 @@ macro_rules! log {
         $crate::log(namespace, $level, &message, Some(&file));
         }
     };
-    ($level:expr, $one_arg:tt) => {
+    ($level:expr, $one_arg:expr) => {
         {
             let arg = $one_arg;
             $crate::log!($level, "{}", arg);
@@ -239,50 +239,50 @@ macro_rules! log {
 
 #[macro_export]
 macro_rules! log_error {
-    ($($args:tt),+) => {
+    ($($args:expr),+) => {
         $crate::log!($crate::LogLevel::Error, $($args),+);
     };
-    ([$namespace:path] $($args:tt),+) => {
+    ([$namespace:path] $($args:expr),+) => {
         $crate::log!([$namespace] $crate::LogLevel::Error, $($args),+);
     };
 }
 
 #[macro_export]
 macro_rules! log_warn {
-    ($($args:tt),+) => {
+    ($($args:expr),+) => {
         $crate::log!($crate::LogLevel::Warn, $($args),+);
     };
-    ([$namespace:path] $($args:tt),+) => {
+    ([$namespace:path] $($args:expr),+) => {
         $crate::log!([$namespace] $crate::LogLevel::Warn, $($args),+);
     };
 }
 
 #[macro_export]
 macro_rules! log_info {
-    ($($args:tt),+) => {
+    ($($args:expr),+) => {
         $crate::log!($crate::LogLevel::Info, $($args),+);
     };
-    ([$namespace:path] $($args:tt),+) => {
+    ([$namespace:path] $($args:expr),+) => {
         $crate::log!([$namespace] $crate::LogLevel::Info, $($args),+);
     };
 }
 
 #[macro_export]
 macro_rules! log_debug {
-    ($($args:tt),+) => {
+    ($($args:expr),+) => {
         $crate::log!($crate::LogLevel::Debug, $($args),+);
     };
-    ([$namespace:path] $($args:tt),+) => {
+    ([$namespace:path] $($args:expr),+) => {
         $crate::log!([$namespace] $crate::LogLevel::Debug, $($args),+);
     };
 }
 
 #[macro_export]
 macro_rules! log_trace {
-    ($($args:tt),+) => {
+    ($($args:expr),+) => {
         $crate::log!($crate::LogLevel::Trace, $($args),+);
     };
-    ([$namespace:path] $($args:tt),+) => {
+    ([$namespace:path] $($args:expr),+) => {
         $crate::log!([$namespace] $crate::LogLevel::Trace, $($args),+);
     };
 }
