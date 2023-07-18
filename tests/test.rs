@@ -1,34 +1,36 @@
 #[test]
 fn all_public() {
-    justlogfox::set_log_level(justlogfox::LogLevel::Trace);
+    use justlogfox::*;
 
-    justlogfox::log!([justlogfox::unittest] justlogfox::LogLevel::Error, "fmt {}", "test");
-    justlogfox::log!([justlogfox::unittest] justlogfox::LogLevel::Error, "test");
-    justlogfox::log!(justlogfox::LogLevel::Error, "fmt {}", "test");
-    justlogfox::log!(justlogfox::LogLevel::Error, "test");
+    set_log_level(LogLevel::Trace);
 
-    justlogfox::log_error!([justlogfox::unittest] "fmt {}", "test");
-    justlogfox::log_error!([justlogfox::unittest] "test");
-    justlogfox::log_error!("fmt {}", "test");
-    justlogfox::log_error!("test");
+    log!([justlogfox::test] LogLevel::Error, "fmt {}", "test");
+    log!([justlogfox::test] LogLevel::Error, "test");
+    log!(LogLevel::Error, "fmt {}", "test");
+    log!(LogLevel::Error, "test");
 
-    justlogfox::log_warn!([justlogfox::unittest] "fmt {}", "test");
-    justlogfox::log_warn!([justlogfox::unittest] "test");
-    justlogfox::log_warn!("fmt {}", "test");
-    justlogfox::log_warn!("test");
+    log_error!([justlogfox::test] "fmt {}", "test");
+    log_error!([justlogfox::test] "test");
+    log_error!("fmt {}", "test");
+    log_error!("test");
 
-    justlogfox::log_info!([justlogfox::unittest] "fmt {}", "test");
-    justlogfox::log_info!([justlogfox::unittest] "test");
-    justlogfox::log_info!("fmt {}", "test");
-    justlogfox::log_info!("test");
+    log_warn!([justlogfox::test] "fmt {}", "test");
+    log_warn!([justlogfox::test] "test");
+    log_warn!("fmt {}", "test");
+    log_warn!("test");
 
-    justlogfox::log_debug!([justlogfox::unittest] "fmt {}", "test");
-    justlogfox::log_debug!([justlogfox::unittest] "test");
-    justlogfox::log_debug!("fmt {}", "test");
-    justlogfox::log_debug!("test");
+    log_info!([justlogfox::test] "fmt {}", "test");
+    log_info!([justlogfox::test] "test");
+    log_info!("fmt {}", "test");
+    log_info!("test");
 
-    justlogfox::log_trace!([justlogfox::unittest] "fmt {}", "test");
-    justlogfox::log_trace!([justlogfox::unittest] "test");
-    justlogfox::log_trace!("fmt {}", "test");
-    justlogfox::log_trace!("test");
+    log_debug!([justlogfox::test] "fmt {}", "test");
+    log_debug!([justlogfox::test] "test");
+    log_debug!("fmt {}", "test");
+    log_debug!("test");
+
+    log_trace!([justlogfox::test] "fmt {}", "test");
+    log_trace!([justlogfox::test] "test");
+    log_trace!("fmt {}", "test");
+    log_trace!("test");
 }

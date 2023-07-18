@@ -215,7 +215,7 @@ macro_rules! log {
         }
     };
     ([$namespace:path] $level:expr, $one_arg:expr) => {
-        $crate::log!([$namespace] $level, "{}", $one_arg);
+        $crate::log!([$namespace] $level, "{}", $one_arg)
     };
 
     ($level:expr, $fmt:literal, $($fmt_args:expr),+) => {
@@ -260,7 +260,7 @@ macro_rules! log_warn {
 #[macro_export]
 macro_rules! log_info {
     ($($args:expr),+) => {
-        $crate::log!($crate::LogLevel::Info, $($args),+);
+        $crate::log!($crate::LogLevel::Info, $($args),+)
     };
     ([$namespace:path] $($args:expr),+) => {
         $crate::log!([$namespace] $crate::LogLevel::Info, $($args),+);
@@ -290,7 +290,7 @@ macro_rules! log_trace {
 #[cfg(test)]
 mod tests {
 
-    use std::sync::atomic::Ordering::{Relaxed, Release, Acquire};
+    use std::sync::atomic::{Ordering::{Release, Acquire, AcqRel}, AtomicUsize};
 
     use super::*;
 
@@ -335,23 +335,47 @@ mod tests {
         set_log_level(LogLevel::Warn);
 
         add_logger(|_, _| {
-            CALLED.store(true, Relaxed);
+            CALLED.store(true, Release);
         });
         log_info!("info");
 
-        assert!( !CALLED.load(Relaxed) );
+        assert!( !CALLED.load(Acquire) );
 
         log_warn!("warn");
 
-        assert!( CALLED.load(Relaxed) );
+        assert!( CALLED.load(Acquire) );
 
-        CALLED.store(false, Relaxed);
+        CALLED.store(false, Release);
 
         set_log_level(LogLevel::Trace);
 
         log_trace!("trace");
 
-        assert!( CALLED.load(Relaxed) );
+        assert!( CALLED.load(Acquire) );
+
+        clear_loggers();
+    }
+
+    #[test]
+    fn parallel_logging() {
+        static CALL_COUNT: AtomicUsize = AtomicUsize::new(0);
+        const N_THREADS: usize = 100;
+
+        add_logger(|_, _| {
+            CALL_COUNT.fetch_add(1, AcqRel);
+        });
+
+        let logging_threads = (0..N_THREADS).map(|_| {
+            std::thread::spawn(|| {
+                log_info!("Logging a thing")
+            })
+        }).collect::<Vec<_>>();
+
+        for t in logging_threads {
+            t.join().unwrap();
+        }
+
+        assert_eq!(CALL_COUNT.load(Acquire), N_THREADS);
 
         clear_loggers();
     }
