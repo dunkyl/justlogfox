@@ -1,5 +1,7 @@
 # justlogfox
 
+**Better:** [log](https://docs.rs/log/latest/log/) (rust crate)
+
 Static lifetime singleton logger with gimmicks. Warning: might not be useful.
 
 ## Running Tests
