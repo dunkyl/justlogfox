@@ -100,7 +100,7 @@ impl StaticLogger {
                 let color = self.crate_colors.get(namespace_segments[0]).unwrap_or(&CssColors::White);
                 let header =
                     if let Some(filename) = message.filename {
-                        let link_location = format!("file:{}", filename); //, line!(), column!()
+                        let link_location = format!("vscode://file/{}", &filename); //, line!(), column!()
                         let link_esc = format!("\x1b]8;id=hi;{}\x1b\\", link_location);
                         let link_esc_end = "\x1b]8;;\x1b\\";
                         format!("{}{}{}{} {}", time_segment.bright_black(), link_esc, crate_.color(*color), link_esc_end, message.level)
@@ -208,9 +208,10 @@ macro_rules! log {
         {
         let message = format!($fmt, $($fmt_args),+);
         let namespace = stringify!($namespace);
-        let cargo_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+        let cargo_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
         let file = cargo_dir.join(file!());
         let file = file.to_string_lossy();
+        let file = format!("{}:{}:{}", file, line!(), column!());
         $crate::log(namespace, $level, &message, Some(&file));
         }
     };
@@ -222,9 +223,10 @@ macro_rules! log {
         {
         let message = format!($fmt, $($fmt_args),+);
         let namespace = module_path!();
-        let cargo_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap();
+        let cargo_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
         let file = cargo_dir.join(file!());
         let file = file.to_string_lossy();
+        let file = format!("{}:{}:{}", file, line!(), column!());
         $crate::log(namespace, $level, &message, Some(&file));
         }
     };

@@ -2,6 +2,7 @@
 fn all_public() {
     use justlogfox::*;
 
+    verbose_verbose_verbose();
     set_log_level(LogLevel::Trace);
 
     log!([justlogfox::test] LogLevel::Error, "fmt {}", "test");
